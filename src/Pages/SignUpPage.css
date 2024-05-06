@@ -1,0 +1,73 @@
+/* SignUpPage.css */
+.page-container {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .til-link {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .sign-up-page {
+    color: white;
+    text-align: center;
+  }
+  
+  .sign-up-page h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .sign-up-page p {
+    font-size: 16px;
+  }
+  
+  .signUpForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .signUpForm .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .signUpForm label {
+    font-size: 18px;
+  }
+  
+  .signUpForm input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    display: block;
+    box-sizing: border-box;
+    border-radius: 15px;
+  }
+  
+  /* .signUpForm button {
+    padding: 20px 40px;
+    font-size: 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  } */
+  
+  .signUpForm button:hover {
+    opacity: 0.3;
+  }
+  .AccountP{
+    text-decoration: underline;
+    color: white;
+  }

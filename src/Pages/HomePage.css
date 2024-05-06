@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+  }
+  
+
+  
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Установите высоту контейнера на весь видимый экран */
+  }
+ 
+  
+  .til {
+    font-size: 200px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .todayILearned {
+    font-size: 24px;
+    color: white;
+  }
+  
+  .toStartUploading {
+    font-size: 16px;
+    color: white;
+  }
+
+  
+  .header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: white;
+    padding: 40px;
+  }
+  
+  .tilh {
+    font-size: 48px;
+    font-weight: bold;
+    margin-right: auto; 
+    margin-left: 100px;
+    margin-top: 50px;
+  }
+  
+  .rightSection {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    margin-top: 50px;
+    margin-right:100px;
+  }
+  
+  .linkh {
+    font-size: 48px;
+    cursor: pointer;
+    margin-left: 30px; /* Отступ между текстом FAQ и ABOUT */
+  }
+  
