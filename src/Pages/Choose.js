@@ -1,16 +1,26 @@
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import "./Choose.css";
-
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 const Choose = () => {
   const onSIGNUpClick = useCallback(() => {
     // Please sync "Loading page" to the project
   }, []);
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1); // Вернуться на предыдущую страницу
+};
 
   return (
     <div className="choose">
       <div className="content">
-        <img className="upload1Icon" alt="" src="/upload1.svg" />
+      <Link to="/" className="til-link">
+                    <IconButton onClick={goBack} className="back-button">
+                        <ArrowBackIosIcon style={{ color: "white" }} />
+                    </IconButton>
+                    TIL
+                </Link>
         
       </div>
       <div className="links">

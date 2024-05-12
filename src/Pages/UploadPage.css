@@ -1,0 +1,26 @@
+.headerupl{
+    display: flex;
+    width: 100%;
+    height: 100px;
+    padding-top: 50px;
+    justify-content: center;
+    gap: 80%;
+}
+.upload{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    padding: 100px;
+}
+.back-button {
+    color: white;
+}
+
+.back-button:hover {
+    color: black; /* Измените цвет, чтобы подсветить кнопку при наведении */
+}
+
+.back-button {
+    margin-right: 10px; /* Добавление отступа между стрелкой и текстом */
+}

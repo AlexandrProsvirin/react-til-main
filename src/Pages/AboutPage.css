@@ -1,0 +1,30 @@
+.headerabout{
+    display: flex;
+    width: 100%;
+    height: 200px;
+    padding-top: 80px;
+    justify-content: center;
+    gap: 80%;
+    
+}
+
+.faq-link {
+    text-decoration: none;
+    color: white;
+    font-size: 48px;
+  }
+  .tilabout-link {
+    text-decoration: none;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+  }
+  .opacityblock{
+    width: 80%;
+    /* background-color: black; */
+    color: white;
+    text-align: center;
+    /* opacity: 0.3; */
+    height: 80%;
+    margin: 0 auto;
+  }

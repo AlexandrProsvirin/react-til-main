@@ -5,9 +5,12 @@ import HomePage from "./Pages/HomePage";
 import Choose from "./Pages/Choose";
 import SignUpPage from "./Pages/SignUpPage";
 import SignInPage from "./Pages/SignInPage";
-// import LibraryPage from './Pages/LibraryPage';
-// import UploadPage from './Pages/UploadPage';
+import AboutPage from "./Pages/AboutPage";
+import FaqPage from "./Pages/FaqPage";
+import LibraryPage from './Pages/LibraryPage';
+import UploadPage from './Pages/UploadPage';
 import Profile from './Pages/Profile';
+import Video from './Pages/Video';
 
 function App() {
   const { pathname } = useLocation();
@@ -18,24 +21,44 @@ function App() {
 
     switch (pathname) {
       case "/":
-        title = "Home Page Title";
+        title = "TIL";
         metaDescription = "Description for the home page.";
         break;
       case "/choose":
-        title = "Choose Page Title";
+        title = "TIL";
         metaDescription = "Description for the choose page.";
         break;
       case "/sign-in":
-        title = "Sign In Page Title";
+        title = "TIL";
         metaDescription = "Description for the sign in page.";
         break;
       case "/sign-up":
-        title = "Sign Up Page Title";
+        title = "TIL";
         metaDescription = "Description for the sign up page.";
         break;
         case "/profile":
-        title = "profile Page Title";
+          title = "TIL";
         metaDescription = "Description for the profile page.";
+        break;
+        case "/about":
+          title = "TIL";
+        metaDescription = "Description for the about page.";
+        break;
+        case "/faq":
+          title = "TIL";
+        metaDescription = "Description for the faq page.";
+        break;
+        case "/library":
+          title = "TIL";
+        metaDescription = "Description for the library page.";
+        break;
+        case "/upload":
+          title = "TIL";
+        metaDescription = "Description for the upload page.";
+        break;
+        case "/video":
+          title = "TIL";
+        metaDescription = "Description for the video page.";
         break;
       default:
         break;
@@ -58,19 +81,20 @@ function App() {
 
   return (
     <div className="App">
-      <video autoPlay loop muted>
+      <video className="background-video"autoPlay loop muted>
         <source src="blurmotion.mp4" type="video/mp4" />
       </video>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/choose" element={<Choose />} />
-        
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
-        {/* <Route path="/library" component={LibraryPage} />
-        <Route path="/upload" component={UploadPage} /> */}
         <Route path="/profile" element={<Profile />} />
-
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/faq" element={<FaqPage />} />
+        <Route path="/library" element={<LibraryPage />} />
+        <Route path="/upload" element={<UploadPage />} />
+        <Route path="/video" element={<Video />} />
       </Routes>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-// import Header from "../Components/Header";
 import "./HomePage.css";
 
 
