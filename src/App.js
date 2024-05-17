@@ -11,6 +11,9 @@ import LibraryPage from './Pages/LibraryPage';
 import UploadPage from './Pages/UploadPage';
 import Profile from './Pages/Profile';
 import Video from './Pages/Video';
+import TitlePage from './Pages/TitlePage';
+import DescriptionPage from './Pages/DescriptionPage';
+import SubtitlesPage from './Pages/SubtitlesPage';
 
 function App() {
   const { pathname } = useLocation();
@@ -60,6 +63,18 @@ function App() {
           title = "TIL";
         metaDescription = "Description for the video page.";
         break;
+        case "/title":
+          title = "TIL";
+        metaDescription = "Description for the title page.";
+        break;
+        case "/description":
+          title = "TIL";
+        metaDescription = "Description for the description page.";
+        break;
+        case "/subtitles":
+          title = "TIL";
+        metaDescription = "Description for the subtitles page.";
+        break;
       default:
         break;
     }
@@ -95,6 +110,9 @@ function App() {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/video" element={<Video />} />
+        <Route path="/title" element={<TitlePage />} />
+        <Route path="/description" element={<DescriptionPage />} />
+        <Route path="/subtitles" element={<SubtitlesPage />} />
       </Routes>
     </div>
   );

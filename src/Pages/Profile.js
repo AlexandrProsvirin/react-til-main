@@ -6,11 +6,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 const Profile = () => {
-  // Предположим, что имя пользователя получено из контекста или хранилища
+  
   const username = 'John Doe';
   const navigate = useNavigate();
   const goBack = () => {
-    navigate(-1); // Вернуться на предыдущую страницу
+    navigate(-1); 
 };
   const onLibraryClick = () => {
     navigate("/library");
