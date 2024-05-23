@@ -36,14 +36,23 @@ function HomePage() {
         <div className="toStartUploading">To start uploading videos sign in</div>
         <Button
           className="SignIn"
-          disableElevation={true}
-          color="secondary"
-          variant="outlined"
-          onClick={onSignUpButtonClick}
-          sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }} 
-        >
-          SIGN UP/IN
-        </Button>
+            disableElevation={true}
+            variant="contained"
+            onClick={onSignUpButtonClick}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  SIGN UP/IN
+</Button>
       </div>
     </div>
   );

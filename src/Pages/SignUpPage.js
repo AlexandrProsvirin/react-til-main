@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-import axios from 'axios'; 
+// import axios from 'axios'; 
 import axiosInstance from '../Axios/axiosInstance';
 
 const SignUpPage = () => {
@@ -80,15 +80,24 @@ const SignUpPage = () => {
                         <input type="date" id="birthdate" name="birthdate" onChange={(e) => setBirthdate(e.target.value)} />
                     </div>
                     <Button
-                        className="SignIn"
-                        disableElevation={true}
-                        color="secondary"
-                        variant="outlined"
-                        onClick={onSignUpButtonClick}
-                        sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }} 
-                    >
-                        SIGN UP
-                    </Button>
+          className="SignUp"
+            disableElevation={true}
+            variant="contained"
+            onClick={onSignUpButtonClick}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  SIGN UP
+</Button>
                 </form>
                 <p>Already have an account? <Link to="/sign-in" className="AccountP">Sign In</Link></p>
             </div>

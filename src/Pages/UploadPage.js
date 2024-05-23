@@ -44,15 +44,24 @@ function UploadPage() {
                     <h1>UPLOAD YOUR FILES HERE</h1>
                     <img src="./file.svg" alt="File upload"></img>
                     <Button
-                        className="uplbtns"
-                        disableElevation={true}
-                        color="secondary"
-                        variant="outlined"
-                        onClick={handleUploadClick}
-                        sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }}
-                    >
-                        UPLOAD
-                    </Button>
+          className="uplbtns"
+            disableElevation={true}
+            variant="contained"
+            onClick={handleUploadClick}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  Upload
+</Button>
                     <input id="fileInput" type="file" style={{ display: "none" }} onChange={handleFileChange} />
                 </div>
             </main>

@@ -34,27 +34,45 @@ const Profile = () => {
       </div>
         </Link>
       <div className="button-container">
-        <Button
+      <Button
           className="profilebtns"
-          disableElevation={true}
-          color="secondary"
-          variant="outlined"
-          onClick={onLibraryClick}
-          sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }} 
-        >
-          Library
-        </Button>
+            disableElevation={true}
+            variant="contained"
+            onClick={onLibraryClick}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  Library
+</Button>
         <div className="tilgr">TIL</div>
         <Button
           className="profilebtns"
-          disableElevation={true}
-          color="secondary"
-          variant="outlined"
-          onClick={onUploadClick}
-          sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }} 
-        >
-          Upload
-        </Button>
+            disableElevation={true}
+            variant="contained"
+            onClick={onUploadClick}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  Upload
+</Button>
       </div>
     </div>
   );

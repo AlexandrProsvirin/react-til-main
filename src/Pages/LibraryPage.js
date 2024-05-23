@@ -1,9 +1,10 @@
+// src/Pages/LibraryPage.js
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import "./LibraryPage.css";
+import VideoList from '../Components/VideoList'; // Импорт компонента VideoList
+import './LibraryPage.css';
 
 function LibraryPage() {
     const username = 'John Doe';
@@ -29,9 +30,7 @@ function LibraryPage() {
                 </Link>
             </header>
             <main className="library">
-                <div className="videolist">
-                    text
-                </div>
+                <VideoList /> 
             </main>
         </div>
     );

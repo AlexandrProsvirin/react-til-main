@@ -34,15 +34,24 @@ const TitlePage = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
       <Button
-          className="Apply"
-          disableElevation={true}
-          color="secondary"
-          variant="outlined"
-          onClick={handleApply}
-          sx={{ borderRadius: "15px", width: 183, height: 69, marginTop: "40px" }} 
-        >
-          Apply
-        </Button>
+          className="Applytitle"
+            disableElevation={true}
+            variant="contained"
+            onClick={handleApply}
+          sx={{
+            backgroundColor: '#6a0dad', // Purple color
+            color: 'white', // White text
+            borderRadius: '15px',
+            width: 183,
+            height: 69,
+            marginTop: '40px',
+            '&:hover': {
+           backgroundColor: '#5a0dbd', // Darker purple on hover
+        }
+    }}
+>
+  Apply
+</Button>
     </div>
   );
 };
