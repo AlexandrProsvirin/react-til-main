@@ -1,28 +1,16 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import "./Video.css"; 
-// import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 function Video() {
     const location = useLocation();
     const { video } = location.state || {};
-    const [isPlaying, setIsPlaying] = useState(false);
     const navigate = useNavigate();
-
-    const handlePlayButtonClick = () => {
-        setIsPlaying(true);
-    };
 
     const goBack = () => {
         navigate(-1); 
-    };
-
-    
-    const onSignUpClick = () => {
-        
     };
 
     return (
@@ -45,15 +33,15 @@ function Video() {
                 </main>
             </div>
             <div className="linksall">
-                <Link className="links3" to="/title">
+                <Link className="links3" to="/title" state={{ video }}>
                     Title
                 </Link>
                 
-                <Link className="links3" to="/description">
+                <Link className="links3" to="/description" state={{ video }}>
                     Description
                 </Link>
                 
-                <Link className="links3" to="/subtitles">
+                <Link className="links3" to="/subtitles" state={{ video }}>
                     Subtitles
                 </Link>
             </div>
@@ -64,7 +52,6 @@ function Video() {
             </div>
         </div>
     );
-    
 }
 
 export default Video;

@@ -39,9 +39,7 @@ body {
     right: 0;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
     color: white;
-    padding: 40px;
   }
   
   .tilh {
@@ -54,15 +52,27 @@ body {
   
   .rightSection {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 25px;
-    margin-top: 50px;
+    margin-top: 60px;
     margin-right:100px;
   }
   
   .linkh {
-    font-size: 48px;
+    font-size: 36px;
     cursor: pointer;
     margin-left: 30px; /* Отступ между текстом FAQ и ABOUT */
+  }
+  .linkmenu {
+    font-size: 36px;
+    cursor: pointer;
+    margin-left: 30px; /* Отступ между текстом FAQ и ABOUT */
+  }
+  .centerSection {
+    display: flex;
+    align-items: flex-start;
+    gap: 50px;
+    margin-top: 60px;
+    margin-left: -600px;
   }
   

@@ -16,6 +16,8 @@ import DescriptionPage from './Pages/DescriptionPage';
 import SubtitlesPage from './Pages/SubtitlesPage';
 
 function App() {
+
+  
   const { pathname } = useLocation();
   
   useEffect(() => {
