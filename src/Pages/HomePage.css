@@ -9,9 +9,9 @@ body {
   .main {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh; /* Установите высоту контейнера на весь видимый экран */
+    height: 100vh;
+    padding-top: 150px; /* Установите высоту контейнера на весь видимый экран */
   }
  
   
@@ -33,12 +33,11 @@ body {
 
   
   .header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    height: 100px;
+    justify-content: flex-start;
+    gap: 5%;
     color: white;
   }
   
@@ -51,11 +50,14 @@ body {
   }
   
   .rightSection {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    color: white;
+    font-size: 48px;
+    margin-right: 100px;
     display: flex;
-    align-items: flex-end;
-    gap: 25px;
-    margin-top: 60px;
-    margin-right:100px;
+    gap: 20px;
   }
   
   .linkh {
@@ -73,6 +75,5 @@ body {
     align-items: flex-start;
     gap: 50px;
     margin-top: 60px;
-    margin-left: -600px;
   }
   

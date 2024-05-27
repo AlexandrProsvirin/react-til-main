@@ -36,6 +36,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 200px;
   }
   
   .signInForm .form-group {
@@ -55,16 +56,6 @@
   box-sizing: border-box; /* Учитывать padding и border в общей ширине */
   border-radius: 15px;
 }
-
-  
-  /* .signInForm button {
-    padding: 20px 40px;
-    font-size: 24px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  } */
   
   .signInForm button:hover {
     opacity: 0.3;

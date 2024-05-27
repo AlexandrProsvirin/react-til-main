@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css";
 import HomePage from "./Pages/HomePage";
 import Choose from "./Pages/Choose";
@@ -14,12 +14,11 @@ import Video from './Pages/Video';
 import TitlePage from './Pages/TitlePage';
 import DescriptionPage from './Pages/DescriptionPage';
 import SubtitlesPage from './Pages/SubtitlesPage';
+import { AuthProvider } from './Components/AuthContext'; // Импортируйте AuthProvider
 
 function App() {
-
-  
   const { pathname } = useLocation();
-  
+
   useEffect(() => {
     let title = "";
     let metaDescription = "";
@@ -41,55 +40,52 @@ function App() {
         title = "TIL";
         metaDescription = "Description for the sign up page.";
         break;
-        case "/profile":
-          title = "TIL";
+      case "/profile":
+        title = "TIL";
         metaDescription = "Description for the profile page.";
         break;
-        case "/about":
-          title = "TIL";
+      case "/about":
+        title = "TIL";
         metaDescription = "Description for the about page.";
         break;
-        case "/faq":
-          title = "TIL";
+      case "/faq":
+        title = "TIL";
         metaDescription = "Description for the faq page.";
         break;
-        case "/library":
-          title = "TIL";
+      case "/library":
+        title = "TIL";
         metaDescription = "Description for the library page.";
         break;
-        case "/upload":
-          title = "TIL";
+      case "/upload":
+        title = "TIL";
         metaDescription = "Description for the upload page.";
         break;
-        case "/video":
-          title = "TIL";
+      case "/video":
+        title = "TIL";
         metaDescription = "Description for the video page.";
         break;
-        case "/title":
-          title = "TIL";
+      case "/title":
+        title = "TIL";
         metaDescription = "Description for the title page.";
         break;
-        case "/description":
-          title = "TIL";
+      case "/description":
+        title = "TIL";
         metaDescription = "Description for the description page.";
         break;
-        case "/subtitles":
-          title = "TIL";
+      case "/subtitles":
+        title = "TIL";
         metaDescription = "Description for the subtitles page.";
         break;
       default:
         break;
     }
-    
 
     if (title) {
       document.title = title;
     }
 
     if (metaDescription) {
-      const metaDescriptionTag = document.querySelector(
-        'head > meta[name="description"]'
-      );
+      const metaDescriptionTag = document.querySelector('head > meta[name="description"]');
       if (metaDescriptionTag) {
         metaDescriptionTag.content = metaDescription;
       }
@@ -98,7 +94,7 @@ function App() {
 
   return (
     <div className="App">
-      <video className="background-video"autoPlay loop muted>
+      <video className="background-video" autoPlay loop muted>
         <source src="blurmotion.mp4" type="video/mp4" />
       </video>
       <Routes>
@@ -123,7 +119,9 @@ function App() {
 function AppWithRouter() {
   return (
     <Router>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </Router>
   );
 }

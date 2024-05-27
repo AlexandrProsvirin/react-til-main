@@ -1,18 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./SignUpPage.css";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-
-// import axios from 'axios'; 
 import axiosInstance from '../Axios/axiosInstance';
+import { AuthContext } from "../Components/AuthContext";
 
 const SignUpPage = () => {
     const navigate = useNavigate();
+    const { setAuth } = useContext(AuthContext);
     const [gender, setGender] = useState(""); 
     const [birthdate, setBirthdate] = useState(""); 
     const [passwordError, setPasswordError] = useState(false); 
+
+
+    const onFAQClick = () => {
+        navigate("/faq");
+      };
+    
+      const onAboutClickHandler = () => {
+        navigate("/about");
+      };
+    
+      const onProfileClick = () => {
+        // Переход на страницу профиля только если пользователь авторизован
+        
+          navigate("/profile");
+        
+      };
+    
+      const onUploadClick = () => {
+        // Переход на страницу загрузки только если пользователь авторизован
+          navigate("/upload");
+      };
+      const onHomePageClick = () => {
+        // Переход на страницу загрузки только если пользователь авторизован
+          navigate("/");
+      };
+
 
     const onSignUpButtonClick = async () => {
         const username = document.getElementById('username').value;
@@ -24,8 +50,7 @@ const SignUpPage = () => {
             return; 
         }
         try {
-            // Отправка POST-запроса на сервер
-            const response = await axiosInstance.post('http://26.56.36.119:8000/api/auth/signup', {  //26.56.36.119
+            const response = await axiosInstance.post('http://26.56.36.119:8000/api/auth/signup', {
                 fio: username,
                 email: email,
                 password: password,
@@ -33,6 +58,14 @@ const SignUpPage = () => {
                 birthday: birthdate
             });
 
+            const userData = { fio: username, email: email }; // assuming the API returns these fields
+            localStorage.setItem("fio", JSON.stringify(userData));
+            setAuth({
+                isAuthenticated: true,
+                user: userData
+            });
+
+            console.log('User data:', userData);
             navigate("/profile");
         } catch (error) {
             console.error('Error during signup:', error);
@@ -44,14 +77,28 @@ const SignUpPage = () => {
     };
 
     return (
-        <div className="page-container">
-            <Link to="/" className="til-link">
-                <IconButton onClick={goBack} className="back-button">
+ <div className="sign-up-page">
+    <header className="headerpr">
+        <div className="leftSection">
+            <div className="tilh">
+          <Link to="/" className="til-link">
+          <IconButton onClick={goBack} className="back-button">
                     <ArrowBackIosIcon style={{ color: "white" }} />
-                </IconButton>
-                TIL
-            </Link>
-            <div className="sign-up-page">
+                </IconButton>TIL
+                </Link></div>
+        </div>
+        <div className="centerSection">
+          <div className="linkmenu" onClick={onHomePageClick}>Home</div>
+          <div className="linkmenu" onClick={onProfileClick}>Profile</div>
+          <div className="linkmenu" onClick={onUploadClick}>Upload</div>
+        </div>
+        <div className="rightSection">
+          <div className="linkh" onClick={onFAQClick}>FAQ</div>
+          <div className="linkh" onClick={onAboutClickHandler}>ABOUT</div>
+          </div>
+      </header>
+        <div className="page-container">
+            <main>
                 <h2>Sign Up</h2>
                 <form className="signUpForm">
                     <div className="form-group">
@@ -80,28 +127,30 @@ const SignUpPage = () => {
                         <input type="date" id="birthdate" name="birthdate" onChange={(e) => setBirthdate(e.target.value)} />
                     </div>
                     <Button
-          className="SignUp"
-            disableElevation={true}
-            variant="contained"
-            onClick={onSignUpButtonClick}
-          sx={{
-            backgroundColor: '#6a0dad', // Purple color
-            color: 'white', // White text
-            borderRadius: '15px',
-            width: 183,
-            height: 69,
-            marginTop: '40px',
-            '&:hover': {
-           backgroundColor: '#5a0dbd', // Darker purple on hover
-        }
-    }}
->
-  SIGN UP
-</Button>
+                        className="SignUp"
+                        disableElevation={true}
+                        variant="contained"
+                        onClick={onSignUpButtonClick}
+                        sx={{
+                            backgroundColor: '#6a0dad', // Purple color
+                            color: 'white', // White text
+                            borderRadius: '15px',
+                            width: 183,
+                            height: 69,
+                            marginTop: '40px',
+                            '&:hover': {
+                                backgroundColor: '#5a0dbd', // Darker purple on hover
+                            }
+                        }}
+                    >
+                        SIGN UP
+                    </Button>
+                    <p>Already have an account? <Link to="/sign-in" className="AccountP">Sign In</Link></p>
                 </form>
-                <p>Already have an account? <Link to="/sign-in" className="AccountP">Sign In</Link></p>
+                </main>
             </div>
         </div>
+    
     );
 };
 

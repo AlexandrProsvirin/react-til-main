@@ -1,5 +1,3 @@
-// UploadPage.js
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -25,7 +23,7 @@ function UploadPage() {
             setSelectedVideo(file);
             navigate("/video", { state: { video: URL.createObjectURL(file) } });
         } else {
-            alert("Пожалуйста, выберите видео файл.");
+            alert("Please select a video file.");
         }
     };
 
