@@ -19,6 +19,7 @@ function UploadPage() {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+        
         if (file && file.type.startsWith("video/")) {
             setSelectedVideo(file);
             navigate("/video", { state: { video: URL.createObjectURL(file) } });

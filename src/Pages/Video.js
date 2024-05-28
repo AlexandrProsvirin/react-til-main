@@ -30,18 +30,13 @@ function Video() {
 
     const uploadVideo = async () => {
         try {
-            // Создаем FormData объект для передачи файла
             const formData = new FormData();
             formData.append('video', video);
-    
-            // Отправляем видео на сервер
             await axios.post('http://26.56.36.119:3000/video/upload-video', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data' // Указываем тип контента как multipart/form-data
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-    
-            // После успешной загрузки переходим на страницу библиотеки или другую страницу
             navigate("/library");
         } catch (error) {
             console.error('Error uploading video:', error);
