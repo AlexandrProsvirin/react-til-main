@@ -8,9 +8,8 @@ import SignInPage from "./Pages/SignInPage";
 import AboutPage from "./Pages/AboutPage";
 import FaqPage from "./Pages/FaqPage";
 import LibraryPage from './Pages/LibraryPage';
-import UploadPage from './Pages/UploadPage';
+import UploadPage from './Pages/Video';
 import Profile from './Pages/Profile';
-import Video from './Pages/Video';
 import TitlePage from './Pages/TitlePage';
 import DescriptionPage from './Pages/DescriptionPage';
 import SubtitlesPage from './Pages/SubtitlesPage';
@@ -107,7 +106,6 @@ function App() {
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/upload" element={<UploadPage />} />
-        <Route path="/video" element={<Video />} />
         <Route path="/title" element={<TitlePage />} />
         <Route path="/description" element={<DescriptionPage />} />
         <Route path="/subtitles" element={<SubtitlesPage />} />

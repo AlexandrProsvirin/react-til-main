@@ -23,7 +23,11 @@ function LibraryPage() {
     const onFAQClick = () => {
       navigate("/faq");
     };
-  
+    
+    const onProfileClickHandler = () => {
+        navigate("/profile");
+      };
+
     const onAboutClickHandler = () => {
       navigate("/about");
     };
@@ -45,6 +49,7 @@ function LibraryPage() {
         <div className="centerSection3">
           <div className="linkmenu2" onClick={onHomePageClick}>Home</div>
           <div className="linkmenu2" onClick={onUploadClick}>Upload</div>
+          <div className="linkmenu2" onClick={onProfileClickHandler}>Profile</div>
           <div className="linkmenu2" onClick={onFAQClick}>FAQ</div>
           <div className="linkmenu2" onClick={onAboutClickHandler}>ABOUT</div>
         </div>

@@ -44,6 +44,10 @@
     display: flex;
     gap: 20px;
 }
+.linkus{
+  color: white;
+  text-decoration: none;
+}
 
 .tilgr {
     font-size: 200px;
