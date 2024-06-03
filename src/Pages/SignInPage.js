@@ -41,9 +41,9 @@ const SignInPage = () => {
 
 
     
-    const onSignInButtonClick = async (e) => {
+      const onSignInButtonClick = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
-
+    
         const username = e.target.username.value;
         const password = e.target.password.value;
         
@@ -51,24 +51,31 @@ const SignInPage = () => {
             setPasswordError(true);
             return; 
         }
-
+    
         try {
-            //НЕ ТРОГАТЬ
             const response = await axiosInstance.post("http://26.56.36.119:8000/api/auth/signin", {
                 fio: username,
                 password: password,
             });
-
+    
             console.log("Login successful:", response.data);
-
-            const userData = { fio: username }; 
-            localStorage.setItem("fio", JSON.stringify(userData));
+    
+            const userData = {
+                fio: response.data.fio,
+                token: response.data.token,
+                id: response.data.id
+            };
+    
             setAuth({
                 isAuthenticated: true,
                 user: userData
             });
-
-            navigate("/profile");
+    
+            localStorage.setItem("fio", JSON.stringify({ fio: response.data.fio }));
+            localStorage.setItem("token", JSON.stringify({ token: response.data.token }));
+            localStorage.setItem("id", JSON.stringify({ id: response.data.id }));
+    
+            navigate("/profile", { state: userData }); 
         } catch (error) {
             console.error('Error during login:', error);
             if (error.response && error.response.data) {
@@ -76,6 +83,7 @@ const SignInPage = () => {
             }
         }
     };
+    
 
     return (
         

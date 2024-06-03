@@ -7,6 +7,7 @@ import SignUpPage from "./Pages/SignUpPage";
 import SignInPage from "./Pages/SignInPage";
 import AboutPage from "./Pages/AboutPage";
 import FaqPage from "./Pages/FaqPage";
+import LoadingPage from "./Pages/LoadingPage";
 import LibraryPage from './Pages/LibraryPage';
 import UploadPage from './Pages/Video';
 import Profile from './Pages/Profile';

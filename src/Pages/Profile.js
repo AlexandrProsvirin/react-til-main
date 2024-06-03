@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Profile.css';
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -7,27 +7,32 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { AuthContext } from '../Components/AuthContext';
 
-const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 4,
-};
-
 const Profile = () => {
     const { auth, setAuth } = useContext(AuthContext);
-    const username = auth.user ? auth.user.fio : 'John Doe';
+    const location = useLocation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (location.state) {
+            setAuth({
+                isAuthenticated: true,
+                user: location.state
+            });
+        } else {
+            const storedUser = JSON.parse(localStorage.getItem("fio"));
+            if (storedUser) {
+                setAuth({
+                    isAuthenticated: true,
+                    user: storedUser
+                });
+            }
+        }
+    }, [location.state, setAuth]);
+
+    const username = auth.user ? auth.user.fio : 'John Doe';
 
     const goBack = () => {
         navigate(-1);
@@ -54,10 +59,6 @@ const Profile = () => {
     };
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const [openModal, setOpenModal] = useState(false);
-    const [openResetPasswordModal, setOpenResetPasswordModal] = useState(false);
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
 
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -67,10 +68,6 @@ const Profile = () => {
         setAnchorEl(null);
     };
 
-    const handleSettingsClick = () => {
-        setOpenModal(true);
-        setAnchorEl(null);
-    };
 
     const handleLogout = async () => {
         if (window.confirm("Are you sure you want to log out?")) {
@@ -79,61 +76,8 @@ const Profile = () => {
             navigate("/sign-in"); 
         }
     };
-    const handleDeleteAccount = async () => {
-        try {
-            const response = await axios.delete('http://26.56.36.119:8000/api/users');
-    
-            if (response.status === 200) {
-                alert('Account deleted successfully');
-                handleLogout(); 
-            } else {
-                alert('Error deleting account');
-            }
-        } catch (error) {
-            alert('Error deleting account');
-            console.error(error);
-        }
-    };
-    
-    
 
-    const handleCloseModal = () => {
-        setOpenModal(false);
-    };
 
-    const handleCloseResetPasswordModal = () => {
-        setOpenResetPasswordModal(false);
-    };
-
-    const handleResetPasswordClick = () => {
-        setOpenResetPasswordModal(true);
-        setOpenModal(false);  // Close the settings modal when opening the reset password modal
-    };
-
-    const handleChangePassword = async () => {
-        try {
-            const token = auth.token; // Получаем токен доступа из состояния аутентификации
-    
-            const response = await axios.put('http://26.56.36.119:8000/api/users', {
-                oldPassword,
-                newPassword
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Включаем токен в заголовок запроса
-                }
-            });
-    
-            if (response.status === 200) {
-                alert('Password changed successfully');
-                handleCloseResetPasswordModal();
-            } else {
-                alert('Error changing password');
-            }
-        } catch (error) {
-            alert('Error changing password');
-            console.error(error);
-        }
-    };
 
     return (
         <div className="profile-page">

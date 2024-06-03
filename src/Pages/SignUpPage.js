@@ -40,11 +40,11 @@ const SignUpPage = () => {
       };
 
 
-    const onSignUpButtonClick = async () => {
+      const onSignUpButtonClick = async () => {
         const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-
+    
         if (password.length < 6) {
             setPasswordError(true);
             return; 
@@ -57,21 +57,28 @@ const SignUpPage = () => {
                 genderId: gender,
                 birthday: birthdate
             });
-
-            const userData = { fio: username, email: email }; // assuming the API returns these fields
-            localStorage.setItem("fio", JSON.stringify(userData));
+    
+            const userData = {
+                fio: response.data.fio,
+                token: response.data.token,
+                id: response.data.id
+            };
+    
             setAuth({
                 isAuthenticated: true,
                 user: userData
             });
-
-            console.log('User data:', userData);
-            navigate("/profile");
+    
+            localStorage.setItem("fio", JSON.stringify({ fio: response.data.fio }));
+            localStorage.setItem("token", JSON.stringify({ token: response.data.token }));
+            localStorage.setItem("id", JSON.stringify({ id: response.data.id }));
+    
+            navigate("/profile", { state: userData }); 
         } catch (error) {
             console.error('Error during signup:', error);
         }
     };
-
+    
     const goBack = () => {
         navigate(-1); 
     };

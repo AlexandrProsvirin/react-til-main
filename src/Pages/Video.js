@@ -1,20 +1,63 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { AuthContext } from "../Components/AuthContext";
 import "./Video.css";
 import "./UploadPage.css";
-import axios from 'axios';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import axiosInstance from 'axios';
+import LoadingPage from './LoadingPage'; // Импортируем компонент LoadingPage
 
 function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const { auth } = useContext(AuthContext);
-  const username = auth.user ? auth.user.fio : "John Doe";
-  const navigate = useNavigate();
   const [videoURL, setVideoURL] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [showLoadingPage, setShowLoadingPage] = useState(false); // Добавляем состояние для отображения LoadingPage
+
+  const { auth, setAuth } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state) {
+      setAuth({
+        isAuthenticated: true,
+        user: location.state
+      });
+    } else {
+      const storedUser = JSON.parse(localStorage.getItem("fio"));
+      if (storedUser) {
+        setAuth({
+          isAuthenticated: true,
+          user: storedUser
+        });
+      }
+    }
+  }, [location.state, setAuth]);
+
+  const username = auth.user ? auth.user.fio : 'John Doe';
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      setAuth({ isAuthenticated: false, user: null }); 
+      localStorage.removeItem("fio"); 
+      navigate("/sign-in"); 
+    }
+  };
 
   const goBack = () => {
     navigate(-1);
@@ -40,6 +83,21 @@ function UploadPage() {
     }
   };
 
+  function sendDataToAlravel(identCode, videoname, descript, subtitre) {
+    axiosInstance.post('http://26.56.36.119:8000/api/video', {
+      'identification': identCode,
+      'videoname': videoname,
+      'discription': descript,
+      'NOTNAME': subtitre
+    }).then(response => {
+      if (response.status === 201) {
+        navigate("/library"); // Перенаправление пользователя после успешной загрузки
+      } else {
+        alert("Failed to upload file.");
+      }
+    });
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -54,25 +112,38 @@ function UploadPage() {
     formData.append('filedata', selectedFile);
 
     try {
-      const response = await axios.post('http://26.56.36.119:3000/upload-video', formData, {
+      await axiosInstance.post('http://26.56.36.119:3000/upload-video', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      });
+      }).then(response => {
+        const identCode = response.data;
 
-      if (response.status === 200) {
-        alert("File uploaded successfully!");
-        navigate("/library"); // Перенаправление пользователя после успешной загрузки
-      } else {
-        alert("Failed to upload file.");
-      }
+        if (response.status === 200) {
+          sendDataToAlravel(identCode, 'name', 'disc', 'sub');
+        } else {
+          alert("Failed to upload file.");
+        }
+      });
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("An error occurred while uploading the file.");
     } finally {
       setUploading(false);
+      setShowLoadingPage(true); // Показать страницу загрузки после загрузки файла
     }
   };
+
+  // Сразу отображаем LoadingPage если пользователь нажал на ссылку "Upload"
+  useEffect(() => {
+    if (uploading) {
+      setShowLoadingPage(true);
+    }
+  }, [uploading]);
+
+  if (showLoadingPage) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="container">
@@ -100,12 +171,21 @@ function UploadPage() {
             </div>
           </div>
 
-          <Link to="/library">
+          <div className="user-menu">
             <div className="user-info">
-              {username}
-              <img src="/vector.svg" alt="Vector" className="vector-image" />
+              <Link to="/profile" className="linkus">{username}</Link>
+              <IconButton onClick={handleMenuClick}>
+                <MoreVertIcon style={{ color: "white" }} />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             </div>
-          </Link>
+          </div>
         </header>
         <main className="iframe">
           {!videoURL && (
@@ -146,26 +226,30 @@ function UploadPage() {
           )}
         </main>
       </div>
-      <div className="linksall">
-        <Link className="links3" to="/title" state={{ selectedFile }}>
-          Title
-        </Link>
+      
+      {videoURL && (
+        <div className="linksall">
+          <Link className="links3" to="/title" state={{ selectedFile }}>
+            Title
+          </Link>
 
-        <Link className="links3" to="/description" state={{ selectedFile }}>
-          Description
-        </Link>
+          <Link className="links3" to="/description" state={{ selectedFile }}>
+            Description
+          </Link>
 
-        <Link className="links3" to="/subtitles" state={{ selectedFile }}>
-          Subtitles
-        </Link>
-      </div>
-      <div className="uploadlinkcontainer">
-        {videoURL && (
+          <Link className="links3" to="/subtitles" state={{ selectedFile }}>
+            Subtitles
+          </Link>
+        </div>
+      )}
+      
+      {videoURL && (
+        <div className="uploadlinkcontainer">
           <Link className="uploadlink" onClick={handleSubmit}>
             Upload
           </Link>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
