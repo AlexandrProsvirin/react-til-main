@@ -13,7 +13,7 @@ const TitlePage = () => {
 
     const handleApply = () => {
         console.log('Title:', title);
-        navigate("/video", { state: { video, title } });
+        navigate("/upload", { state: { video, title } });
     };
 
     const goBack = () => {

@@ -12,7 +12,7 @@ const DescriptionPage = () => {
     const [description, setDescription] = useState('');
 
     const handleApply = () => {
-        navigate("/video", { state: { video } });
+        navigate("/upload", { state: { video } });
         console.log('Description:', description);
     };
 

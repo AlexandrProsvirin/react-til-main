@@ -73,6 +73,8 @@ const Profile = () => {
         if (window.confirm("Are you sure you want to log out?")) {
             setAuth({ isAuthenticated: false, user: null }); 
             localStorage.removeItem("fio"); 
+            localStorage.removeItem("token"); 
+            localStorage.removeItem("id"); 
             navigate("/sign-in"); 
         }
     };

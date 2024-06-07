@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import HomePage from "./Pages/HomePage";
 import Choose from "./Pages/Choose";
@@ -14,7 +14,8 @@ import Profile from './Pages/Profile';
 import TitlePage from './Pages/TitlePage';
 import DescriptionPage from './Pages/DescriptionPage';
 import SubtitlesPage from './Pages/SubtitlesPage';
-import { AuthProvider } from './Components/AuthContext'; // Импортируйте AuthProvider
+import { AuthProvider } from './Components/AuthContext';
+import ProtectedRoute from './Components/ProtectedRoutes';
 
 function App() {
   const { pathname } = useLocation();
@@ -102,11 +103,11 @@ function App() {
         <Route path="/choose" element={<Choose />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<ProtectedRoute element={Profile} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/faq" element={<FaqPage />} />
-        <Route path="/library" element={<LibraryPage />} />
-        <Route path="/upload" element={<UploadPage />} />
+        <Route path="/library" element={<ProtectedRoute element={LibraryPage} />} />
+        <Route path="/upload" element={<ProtectedRoute element={UploadPage} />} />
         <Route path="/title" element={<TitlePage />} />
         <Route path="/description" element={<DescriptionPage />} />
         <Route path="/subtitles" element={<SubtitlesPage />} />

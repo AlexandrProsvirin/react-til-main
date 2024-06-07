@@ -53,7 +53,7 @@ const SignInPage = () => {
         }
     
         try {
-            const response = await axiosInstance.post("http://26.56.36.119:8000/api/auth/signin", {
+            const response = await axiosInstance.post("http://192.168.193.2:8000/api/auth/signin", {
                 fio: username,
                 password: password,
             });

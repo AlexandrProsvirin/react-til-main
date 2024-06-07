@@ -17,7 +17,12 @@ function HomePage() {
   }, [navigate, isAuthenticated]);
 
   const onSignUpButtonClick = () => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+    if(!isAuthenticated){
     navigate("/choose");
+    }
   };
 
   const onFAQClick = () => {

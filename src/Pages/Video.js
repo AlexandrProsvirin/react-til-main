@@ -10,17 +10,26 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import axiosInstance from 'axios';
-import LoadingPage from './LoadingPage'; // Импортируем компонент LoadingPage
+import LoadingPage from './LoadingPage'; 
+import Modal from '@mui/material/Modal'; 
+import Box from '@mui/material/Box'; 
+import TextField from '@mui/material/TextField';
 
 function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [dataForVideo, setDataForVideo] = useState({ title: '', description: '', subtitles: '' });
   const [videoURL, setVideoURL] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [showLoadingPage, setShowLoadingPage] = useState(false); // Добавляем состояние для отображения LoadingPage
+  const [showLoadingPage, setShowLoadingPage] = useState(false); 
 
   const { auth, setAuth } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openTitleModal, setOpenTitleModal] = useState(false);
+  const [openDescriptionModal, setOpenDescriptionModal] = useState(false);
+  const [openSubtitlesModal, setOpenSubtitlesModal] = useState(false);
 
   useEffect(() => {
     if (location.state) {
@@ -40,8 +49,6 @@ function UploadPage() {
   }, [location.state, setAuth]);
 
   const username = auth.user ? auth.user.fio : 'John Doe';
-
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -83,15 +90,16 @@ function UploadPage() {
     }
   };
 
-  function sendDataToAlravel(identCode, videoname, descript, subtitre) {
-    axiosInstance.post('http://26.56.36.119:8000/api/video', {
+  const sendDataToAlravel = (identCode, videoname, descript, subtitre) => {
+    axiosInstance.post('http://192.168.193.2:8000/api/video', {
       'identification': identCode,
       'videoname': videoname,
       'discription': descript,
-      'NOTNAME': subtitre
+      'subtitle': subtitre
     }).then(response => {
       if (response.status === 201) {
-        navigate("/library"); // Перенаправление пользователя после успешной загрузки
+        alert("File uploaded.");
+        navigate("/library"); 
       } else {
         alert("Failed to upload file.");
       }
@@ -112,7 +120,7 @@ function UploadPage() {
     formData.append('filedata', selectedFile);
 
     try {
-      await axiosInstance.post('http://26.56.36.119:3000/upload-video', formData, {
+      await axiosInstance.post('http://192.168.193.2:3000/upload-video', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -120,7 +128,7 @@ function UploadPage() {
         const identCode = response.data;
 
         if (response.status === 200) {
-          sendDataToAlravel(identCode, 'name', 'disc', 'sub');
+          sendDataToAlravel(identCode, dataForVideo.title, dataForVideo.description, dataForVideo.subtitles);
         } else {
           alert("Failed to upload file.");
         }
@@ -130,11 +138,10 @@ function UploadPage() {
       alert("An error occurred while uploading the file.");
     } finally {
       setUploading(false);
-      setShowLoadingPage(true); // Показать страницу загрузки после загрузки файла
+      setShowLoadingPage(true);
     }
   };
 
-  // Сразу отображаем LoadingPage если пользователь нажал на ссылку "Upload"
   useEffect(() => {
     if (uploading) {
       setShowLoadingPage(true);
@@ -144,6 +151,31 @@ function UploadPage() {
   if (showLoadingPage) {
     return <LoadingPage />;
   }
+
+  const handleInputChange = (field) => (event) => {
+    setDataForVideo({
+      ...dataForVideo,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleApply = (modalType) => {
+    setOpenTitleModal(false);
+    setOpenDescriptionModal(false);
+    setOpenSubtitlesModal(false);
+  };
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <div className="container">
@@ -226,18 +258,18 @@ function UploadPage() {
           )}
         </main>
       </div>
-      
+
       {videoURL && (
         <div className="linksall">
-          <Link className="links3" to="/title" state={{ selectedFile }}>
+          <Link className="links3" onClick={() => setOpenTitleModal(true)}>
             Title
           </Link>
 
-          <Link className="links3" to="/description" state={{ selectedFile }}>
+          <Link className="links3" onClick={() => setOpenDescriptionModal(true)}>
             Description
           </Link>
 
-          <Link className="links3" to="/subtitles" state={{ selectedFile }}>
+          <Link className="links3" onClick={() => setOpenSubtitlesModal(true)}>
             Subtitles
           </Link>
         </div>
@@ -250,6 +282,115 @@ function UploadPage() {
           </Link>
         </div>
       )}
+
+      <Modal
+        open={openTitleModal}
+        onClose={() => setOpenTitleModal(false)}
+        aria-labelledby="title-modal-title"
+        aria-describedby="title-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <h2 id="title-modal-title">Title</h2>
+          <TextField
+            label="Title"
+            fullWidth
+            value={dataForVideo.title}
+            onChange={handleInputChange('title')}
+          />
+          <Button
+            className="apply-button-title"
+            disableElevation={true}
+            variant="contained"
+            onClick={() => handleApply('title')}
+            sx={{
+              backgroundColor: '#6a0dad',
+              color: 'white',
+              borderRadius: '15px',
+              width: 183,
+              height: 69,
+              '&:hover': {
+                backgroundColor: '#5a0dbd',
+              }
+            }}
+          >
+            Apply
+          </Button>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openDescriptionModal}
+        onClose={() => setOpenDescriptionModal(false)}
+        aria-labelledby="description-modal-description"
+        aria-describedby="description-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <h2 id="description-modal-description">Description</h2>
+          <TextField
+            label="Description"
+            fullWidth
+            multiline
+            rows={4}
+            value={dataForVideo.description}
+            onChange={handleInputChange('description')}
+          />
+          <Button
+            className="apply-button-description"
+            disableElevation={true}
+            variant="contained"
+            onClick={() => handleApply('description')}
+            sx={{
+              backgroundColor: '#6a0dad',
+              color: 'white',
+              borderRadius: '15px',
+              width: 183,
+              height: 69,
+              '&:hover': {
+                backgroundColor: '#5a0dbd',
+              }
+            }}
+          >
+            Apply
+          </Button>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openSubtitlesModal}
+        onClose={() => setOpenSubtitlesModal(false)}
+        aria-labelledby="subtitles-modal-subtitles"
+        aria-describedby="subtitles-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <h2 id="subtitles-modal-subtitles">Subtitles</h2>
+          <TextField
+            label="Subtitles"
+            fullWidth
+            multiline
+            rows={4}
+            value={dataForVideo.subtitles}
+            onChange={handleInputChange('subtitles')}
+          />
+          <Button
+            className="apply-button-title"
+            disableElevation={true}
+            variant="contained"
+            onClick={() => handleApply('subtitles')}
+            sx={{
+              backgroundColor: '#6a0dad',
+              color: 'white',
+              borderRadius: '15px',
+              width: 183,
+              height: 69,
+              '&:hover': {
+                backgroundColor: '#5a0dbd',
+              }
+            }}
+          >
+            Apply
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 }

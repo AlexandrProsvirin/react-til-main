@@ -12,7 +12,7 @@ const SubtitlesPage = () => {
     const [subtitles, setSubtitles] = useState('');
 
     const handleApply = () => {
-        navigate("/video", { state: { video } });
+        navigate("/upload", { state: { video } });
         console.log('Subtitles:', subtitles);
     };
 
