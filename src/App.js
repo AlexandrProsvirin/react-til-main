@@ -11,9 +11,6 @@ import LoadingPage from "./Pages/LoadingPage";
 import LibraryPage from './Pages/LibraryPage';
 import UploadPage from './Pages/Video';
 import Profile from './Pages/Profile';
-import TitlePage from './Pages/TitlePage';
-import DescriptionPage from './Pages/DescriptionPage';
-import SubtitlesPage from './Pages/SubtitlesPage';
 import { AuthProvider } from './Components/AuthContext';
 import ProtectedRoute from './Components/ProtectedRoutes';
 
@@ -108,9 +105,6 @@ function App() {
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/library" element={<ProtectedRoute element={LibraryPage} />} />
         <Route path="/upload" element={<ProtectedRoute element={UploadPage} />} />
-        <Route path="/title" element={<TitlePage />} />
-        <Route path="/description" element={<DescriptionPage />} />
-        <Route path="/subtitles" element={<SubtitlesPage />} />
       </Routes>
     </div>
   );

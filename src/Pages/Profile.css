@@ -1,4 +1,4 @@
-/* Profile.css */
+
 .profile-page {
     display: flex;
     flex-direction: column;
@@ -18,7 +18,7 @@
   .linkmenu2 {
     font-size: 36px;
     cursor: pointer;
-    margin-left: 30px; /* Отступ между текстом FAQ и ABOUT */
+    margin-left: 30px; 
   }
   .centerSection2 {
     display: flex;
@@ -59,7 +59,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Высота контейнера равна высоте видимой области страницы */
+    height: 100vh; 
     gap: 100px;
 }
 
@@ -80,4 +80,23 @@
   .upload-button:hover {
     background-color: #0056b3;
   }
+  .modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: white;
+    border: 2px solid #000;
+    box-shadow: 24px;
+    padding: 16px;
+    outline: none;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+
   

@@ -115,7 +115,7 @@ const VideoList = () => {
               {selectedVideo && (
                 <div>
                   <p><strong>Name:</strong> {selectedVideo.videoname}</p>
-                  <p><strong>Subtitles:</strong> {selectedVideo.NOTNAME}</p>
+                  <p><strong>Subtitles:</strong> {selectedVideo.subtitle}</p>
                   <p><strong>Description:</strong> {selectedVideo.discription || "No description available"}</p>
                   <p><strong>Created At:</strong> {selectedVideo.created_at || "No information"}</p>
                 </div>
