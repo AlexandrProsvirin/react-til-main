@@ -10,31 +10,63 @@ import MenuItem from '@mui/material/MenuItem';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
-import { AuthContext } from '../Components/AuthContext';
 import axiosInstance from '../Axios/axiosInstance';
+import { AuthContext } from '../Components/AuthContext';
 
 const Profile = () => {
     const { auth, setAuth } = useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
 
+    const [users, setUsers] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+    const [openUsersModal, setOpenUsersModal] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openPasswordModal, setOpenPasswordModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [error, setError] = useState('');
+   
+    useEffect(() => {
+        const fio = localStorage.getItem("fio");
+        const id = localStorage.getItem("id");
+        
+        const parsedFio = fio ? JSON.parse(fio) : null;
+        const parsedId = id ? JSON.parse(id) : null;
+    
+        console.log('Retrieved fio from localStorage:', parsedFio); 
+        console.log('Retrieved id from localStorage:', parsedId);
+    
+        if (parsedFio && parsedId) {
+            const storedUser = { fio: parsedFio.fio, id: parsedId.id };
+            if (!isNaN(storedUser.id)) { 
+                setAuth((prevAuth) => ({
+                    isAuthenticated: true,
+                    user: { ...prevAuth.user, fio: storedUser.fio, id: storedUser.id }
+                }));
+            } else {
+                console.error('Invalid id:', parsedId.id);
+            }
+        }
+    }, [setAuth]);
+    
     useEffect(() => {
         if (location.state) {
             setAuth({
                 isAuthenticated: true,
                 user: location.state
             });
-        } else {
-            const storedUser = JSON.parse(localStorage.getItem("fio"));
-            if (storedUser) {
-                setAuth({
-                    isAuthenticated: true,
-                    user: storedUser
-                });
-            }
         }
     }, [location.state, setAuth]);
+    
+    useEffect(() => {
+        console.log('Updated user in auth:', auth.user);
+    }, [auth.user]);
+    
+    
+    
 
     const username = auth.user ? auth.user.fio : 'John Doe';
 
@@ -62,15 +94,6 @@ const Profile = () => {
         navigate("/upload");
     };
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [openNameModal, setOpenNameModal] = useState(false);
-    const [openPasswordModal, setOpenPasswordModal] = useState(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [newName, setNewName] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [error, setError] = useState('');
-
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -89,14 +112,6 @@ const Profile = () => {
         }
     };
 
-    const handleOpenNameModal = () => {
-        setOpenNameModal(true);
-    };
-
-    const handleCloseNameModal = () => {
-        setOpenNameModal(false);
-    };
-
     const handleOpenPasswordModal = () => {
         setOpenPasswordModal(true);
     };
@@ -113,73 +128,57 @@ const Profile = () => {
         setOpenDeleteModal(false);
     };
 
-    const handleUpdateName = async () => {
-        try {
-            const token = JSON.parse(localStorage.getItem("token"));
-            const userId = auth.user.id;
-    
-            // Получение данных пользователя
-            const userResponse = await axios.get(`http://192.168.193.2:8000/api/users/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-    
-            // Обновление атрибутов пользователя
-            userResponse.data.fio = newName;
-    
-            // Отправка обновленных данных на сервер
-            const updateResponse = await axios.put(`http://192.168.193.2:8000/api/users`, {
-                id: userId,
-                fio: userResponse.data.fio,
-                email: userResponse.data.email,
-                birthday: userResponse.data.birthday,
-                password: userResponse.data.password,
-                genderId: userResponse.data.genderId,
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-    
-            setAuth({
-                isAuthenticated: true,
-                user: updateResponse.data
-            });
-            localStorage.setItem("fio", JSON.stringify(updateResponse.data));
-            handleCloseNameModal();
-        } catch (error) {
-            console.error('Error updating name:', error);
-        }
-    };
-
     const handleChangePassword = async () => {
         try {
             const token = JSON.parse(localStorage.getItem("token"));
-            const response = await axios.put(`http://192.168.193.2:8000/api/users`, {
-                current_password: currentPassword,
-                new_password: newPassword
+            if (!token) {
+                throw new Error('Token not found');
+            }
+    
+            if (!auth || !auth.user || !auth.user.id) {
+                throw new Error('User ID not found');
+            }
+    
+            const userId = auth.user.id;
+    
+            const response = await axiosInstance.put(`http://192.168.193.2:8000/api/user/update_password`, {
+                currentPassword,
+                newPassword
             }, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    'Authorization': `Bearer ${token.token}`
                 }
             });
-            if (response.data.error) {
-                setError(response.data.error);
-            } else {
+    
+            if (response.data.success) {
+                setAuth((prevAuth) => ({
+                    ...prevAuth,
+                    user: {
+                        ...prevAuth.user,
+                        password: newPassword
+                    }
+                }));
+    
                 setError('');
                 handleClosePasswordModal();
+            } else {
+                setError('Current password is incorrect');
             }
         } catch (error) {
             console.error('Error changing password:', error);
-            setError('An error occurred. Please try again.');
+            if (error.response && error.response.data) {
+                setError(error.response.data.error || 'An error occurred. Please try again.');
+            } else {
+                setError('An error occurred. Please try again.');
+            }
         }
     };
-
+    
+    
     const handleDeleteUser = async () => {
         try {
             const token = JSON.parse(localStorage.getItem("token"));
-            await axios.delete(`http://192.168.193.2:8000/api/users`, {
+            await axiosInstance.delete(`http://192.168.193.2:8000/api/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -194,6 +193,88 @@ const Profile = () => {
             console.error('Error deleting user:', error);
         }
     };
+
+    const handleViewUsers = async () => {
+        try {
+            const token = JSON.parse(localStorage.getItem("token"));
+            const response = await axiosInstance.get(`http://192.168.193.2:8000/api/users`, {
+                headers: {
+                    'Authorization': `Bearer ${token.token}`
+                }
+            });
+
+            const filteredUsers = response.data.filter(user => ![1, 2, 3].includes(user.id));
+
+            setUsers(filteredUsers); 
+            setOpenUsersModal(true); 
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    const handleBanUser = async (user) => {
+        try {
+            const token = JSON.parse(localStorage.getItem("token"));
+            await axiosInstance.post(`http://192.168.193.2:8000/users/${user}/banned`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${token.token}`
+                }
+            });
+
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user.id === user ? { ...user, banned: true } : user
+                )
+            );
+        } catch (error) {
+            console.error('Error banning user:', error);
+        }
+    };
+
+    const handleUnbanUser = async (user_id) => {
+        try {
+            const token = JSON.parse(localStorage.getItem("token"));
+            await axiosInstance.post(`http://192.168.193.2:8000/users/${user_id}/unbanned`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${token.token}`
+                }
+            });
+
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user.id === user_id ? { ...user, banned: false } : user
+                )
+            );
+        } catch (error) {
+            console.error('Error unbanning user:', error);
+        }
+    };
+
+    const isAdmin = auth.user && [1, 2, 3].includes(auth.user.id);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSort = () => {
+        setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    };
+
+    const handleClearFilter = () => {
+        setSearchTerm('');
+        setSortOrder('');
+    };
+
+    const filteredUsers = users
+        .filter((user) => user.fio.toLowerCase().includes(searchTerm.toLowerCase()))
+        .sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return a.fio.localeCompare(b.fio);
+            } else if (sortOrder === 'desc') {
+                return b.fio.localeCompare(a.fio);
+            }
+            return 0;
+        });
 
     return (
         <div className="profile-page">
@@ -225,9 +306,8 @@ const Profile = () => {
                             onClose={handleMenuClose}
                         >
                             <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                            <MenuItem onClick={handleOpenNameModal}>Change Name</MenuItem>
                             <MenuItem onClick={handleOpenPasswordModal}>Change Password</MenuItem>
-                            <MenuItem onClick={handleOpenDeleteModal}>Delete Account</MenuItem>
+                            {isAdmin && <MenuItem onClick={handleViewUsers}>View Users</MenuItem>}
                         </Menu>
                     </div>
                 </div>
@@ -239,14 +319,14 @@ const Profile = () => {
                     variant="contained"
                     onClick={onLibraryClick}
                     sx={{
-                        backgroundColor: '#6a0dad', // Purple color
-                        color: 'white', // White text
+                        backgroundColor: '#6a0dad', 
+                        color: 'white', 
                         borderRadius: '15px',
                         width: 183,
                         height: 69,
                         marginTop: '40px',
                         '&:hover': {
-                            backgroundColor: '#5a0dbd', // Darker purple on hover,
+                            backgroundColor: '#5a0dbd', 
                         }
                     }}
                 >
@@ -259,45 +339,20 @@ const Profile = () => {
                     variant="contained"
                     onClick={onUploadClick}
                     sx={{
-                        backgroundColor: '#6a0dad', // Purple color
-                        color: 'white', // White text
+                        backgroundColor: '#6a0dad',
+                        color: 'white', 
                         borderRadius: '15px',
                         width: 183,
                         height: 69,
                         marginTop: '40px',
                         '&:hover': {
-                            backgroundColor: '#5a0dbd', // Darker purple on hover,
+                            backgroundColor: '#5a0dbd', 
                         }
                     }}
                 >
                     Upload
                 </Button>
             </div>
-            <Modal
-                open={openNameModal}
-                onClose={handleCloseNameModal}
-                aria-labelledby="name-modal-title"
-                aria-describedby="name-modal-description"
-            >
-                <Box className="modal-box">
-                    <h2 id="name-modal-title">Change Name</h2>
-                    <TextField
-                        label="New Name"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleUpdateName}
-                    >
-                        Update
-                    </Button>
-                </Box>
-            </Modal>
             <Modal
                 open={openPasswordModal}
                 onClose={handleClosePasswordModal}
@@ -349,6 +404,54 @@ const Profile = () => {
                         onClick={handleDeleteUser}
                     >
                         Delete
+                    </Button>
+                </Box>
+            </Modal>
+            <Modal
+                open={openUsersModal}
+                onClose={() => setOpenUsersModal(false)}
+                aria-labelledby="users-modal-title"
+                aria-describedby="users-modal-description"
+            >
+                <Box className="modal-box">
+                    <h2 id="users-modal-title">Registered Users</h2>
+                    <TextField
+                        label="Search"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                    <div>
+                        <Button variant="contained" onClick={handleSort}>
+                            Sort {sortOrder === 'asc' ? 'Descending' : 'Ascending'}
+                        </Button>
+                        <Button variant="outlined" onClick={handleClearFilter} style={{ marginLeft: '10px' }}>
+                            Clear Filter
+                        </Button>
+                    </div>
+                    <ul>
+                        {filteredUsers.map((user) => (
+                            <li key={user.id}>
+                                {user.fio}
+                                {user.banned ? (
+                                    <>
+                                        <span style={{ color: 'gray', marginLeft: '10px' }}>Banned</span>
+                                        <Link to="#" onClick={() => handleUnbanUser(user.id)} style={{ marginLeft: '10px' }}>Unban</Link>
+                                    </>
+                                ) : (
+                                    <Link to="#" onClick={() => handleBanUser(user.id)} style={{ marginLeft: '10px' }}>Ban</Link>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setOpenUsersModal(false)}
+                    >
+                        Close
                     </Button>
                 </Box>
             </Modal>

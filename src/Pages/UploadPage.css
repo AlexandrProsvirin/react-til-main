@@ -18,9 +18,9 @@
 }
 
 .back-button:hover {
-    color: black; /* Измените цвет, чтобы подсветить кнопку при наведении */
+    color: black; 
 }
 
 .back-button {
-    margin-right: 10px; /* Добавление отступа между стрелкой и текстом */
+    margin-right: 10px; 
 }

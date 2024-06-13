@@ -5,11 +5,11 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 const Choose = () => {
   const onSIGNUpClick = useCallback(() => {
-    // Please sync "Loading page" to the project
+    
   }, []);
   const navigate = useNavigate();
   const goBack = () => {
-    navigate(-1); // Вернуться на предыдущую страницу
+    navigate(-1); 
 };
 
   return (

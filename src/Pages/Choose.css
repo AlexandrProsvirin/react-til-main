@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Высота на весь видимый экран */
+    height: 100vh; 
   }
   
   .content {
@@ -13,8 +13,8 @@
   }
   
   b {
-    color: white; /* Белый текст */
-    font-size: 108px; /* Пространство между текстом OR и ссылками */
+    color: white;
+    font-size: 108px; 
   }
   
   .links {
@@ -29,14 +29,14 @@
     text-decoration: none;
     text-align: center;
     font-size: 48px;
-    color: white; /* Белый текст */
-    background-color: rgba(0, 0, 0, 0.2); /* Черный задний фон с 30% непрозрачностью */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.2); 
     border-radius: 15px;
     width: 200px;
     height: 100px;
-    display: flex; /* Размещение элементов внутри блока по оси */
-    justify-content: center; /* Выравнивание по горизонтали */
-    align-items: center; /* Выравнивание по вертикали */
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
   }
   
   

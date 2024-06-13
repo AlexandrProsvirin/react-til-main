@@ -1,5 +1,5 @@
 import React from 'react';
-import './LoadingPage.css'; // Подключите стили для страницы загрузки
+import './LoadingPage.css'; 
 
 const LoadingPage = () => {
   return (
@@ -8,7 +8,7 @@ const LoadingPage = () => {
         <source src="blurmotion.mp4" type="video/mp4" />
       </video>
       <h1>Loading...</h1>
-      <p>Your file is being uploaded. Please wait.</p>
+      <p>Please wait.</p>
       <div className="spinner"></div>
     </div>
   );

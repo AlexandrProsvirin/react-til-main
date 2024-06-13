@@ -1,9 +1,8 @@
-// src/Pages/LibraryPage.js
 import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import VideoList from '../Components/VideoList'; // Импорт компонента VideoList
+import VideoList from '../Components/VideoList'; 
 import './LibraryPage.css';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -54,7 +53,7 @@ function LibraryPage() {
     };
 
     const goBack = () => {
-        navigate(-1); // Вернуться на предыдущую страницу
+        navigate(-1);
     };
 
     const onHomePageClick = () => {

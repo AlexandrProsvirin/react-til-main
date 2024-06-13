@@ -9,107 +9,103 @@ import { AuthContext } from "../Components/AuthContext";
 
 const SignInPage = () => {
     const navigate = useNavigate();
-    const [passwordError, setPasswordError] = useState(false); 
+    const [passwordError, setPasswordError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const { setAuth } = useContext(AuthContext);
-    
+
     const goBack = () => {
         navigate(-1);
     };
+
     const onFAQClick = () => {
         navigate("/faq");
-      };
-    
-      const onAboutClickHandler = () => {
+    };
+
+    const onAboutClickHandler = () => {
         navigate("/about");
-      };
-    
-      const onProfileClick = () => {
-        // Переход на страницу профиля только если пользователь авторизован
-        
-          navigate("/profile");
-        
-      };
-    
-      const onUploadClick = () => {
-        // Переход на страницу загрузки только если пользователь авторизован
-          navigate("/upload");
-      };
-      const onHomePageClick = () => {
-        // Переход на страницу загрузки только если пользователь авторизован
-          navigate("/");
-      };
+    };
 
+    const onProfileClick = () => {
+        navigate("/profile");
+    };
 
-    
-      const onSignInButtonClick = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-    
+    const onUploadClick = () => {
+        navigate("/upload");
+    };
+
+    const onHomePageClick = () => {
+        navigate("/");
+    };
+
+    const onSignInButtonClick = async (e) => {
+        e.preventDefault();
+
         const username = e.target.username.value;
         const password = e.target.password.value;
-        
+
         if (password.length < 6) {
             setPasswordError(true);
-            return; 
+            return;
         }
-    
+
         try {
             const response = await axiosInstance.post("http://192.168.193.2:8000/api/auth/signin", {
                 fio: username,
                 password: password,
             });
-    
+
             console.log("Login successful:", response.data);
-    
+
             const userData = {
                 fio: response.data.fio,
                 token: response.data.token,
                 id: response.data.id
             };
-    
+
             setAuth({
                 isAuthenticated: true,
                 user: userData
             });
-    
+
             localStorage.setItem("fio", JSON.stringify({ fio: response.data.fio }));
             localStorage.setItem("token", JSON.stringify({ token: response.data.token }));
             localStorage.setItem("id", JSON.stringify({ id: response.data.id }));
-    
-            navigate("/profile", { state: userData }); 
+
+            navigate("/profile", { state: userData });
         } catch (error) {
             console.error('Error during login:', error);
             if (error.response && error.response.data) {
                 console.error('Server response:', error.response.data);
+                setErrorMessage('Invalid username or password');
             }
         }
     };
-    
 
     return (
-        
-    <div className="signIn-page">
+        <div className="signIn-page">
             <header className="headerpr">
-        <div className="leftSection">
-            <div className="tilh">
-          <Link to="/" className="til-link">
-          <IconButton onClick={goBack} className="back-button">
-                    <ArrowBackIosIcon style={{ color: "white" }} />
-                </IconButton>TIL
-                </Link></div>
-        </div>
-        <div className="centerSection">
-          <div className="linkmenu" onClick={onHomePageClick}>Home</div>
-          <div className="linkmenu" onClick={onProfileClick}>Profile</div>
-          <div className="linkmenu" onClick={onUploadClick}>Upload</div>
-        </div>
-        <div className="rightSection">
-          <div className="linkh" onClick={onFAQClick}>FAQ</div>
-          <div className="linkh" onClick={onAboutClickHandler}>ABOUT</div>
-        </div>
-      </header>
-      <div className="page-container">
-      
+                <div className="leftSection">
+                    <div className="tilh">
+                        <Link to="/" className="til-link">
+                            <IconButton onClick={goBack} className="back-button">
+                                <ArrowBackIosIcon style={{ color: "white" }} />
+                            </IconButton>TIL
+                        </Link>
+                    </div>
+                </div>
+                <div className="centerSection">
+                    <div className="linkmenu" onClick={onHomePageClick}>Home</div>
+                    <div className="linkmenu" onClick={onProfileClick}>Profile</div>
+                    <div className="linkmenu" onClick={onUploadClick}>Upload</div>
+                </div>
+                <div className="rightSection">
+                    <div className="linkh" onClick={onFAQClick}>FAQ</div>
+                    <div className="linkh" onClick={onAboutClickHandler}>ABOUT</div>
+                </div>
+            </header>
+            <div className="page-container">
                 <h2>Sign In</h2>
+                {errorMessage && <div className="error-message-box">{errorMessage}</div>}
                 <form className="signInForm" onSubmit={onSignInButtonClick}>
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
@@ -124,7 +120,7 @@ const SignInPage = () => {
                         className="SignIn"
                         disableElevation={true}
                         variant="contained"
-                        type="submit" // Change button type to "submit"
+                        type="submit"
                         sx={{
                             backgroundColor: '#6a0dad',
                             color: 'white',
@@ -141,10 +137,8 @@ const SignInPage = () => {
                     </Button>
                     <p className="parag">Don't have an account? <Link to="/sign-up" className="AccountP">Sign Up</Link></p>
                 </form>
-                
-                
             </div>
-            </div>
+        </div>
     );
 };
 

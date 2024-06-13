@@ -31,7 +31,7 @@ iframe {
     width: 150px;
     height: 50px;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.2); /* Черный задний фон с 30% непрозрачностью */
+    background-color: rgba(0, 0, 0, 0.2); 
     border-radius: 15px; 
 }
 .linksall {
@@ -46,7 +46,7 @@ iframe {
     text-align: center;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 15px;
-    margin: 0 auto; /* Выравнивание по центру по горизонтали */
+    margin: 0 auto; 
 }
 
 .uploadlink {

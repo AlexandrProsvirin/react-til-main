@@ -21,6 +21,8 @@ function UploadPage() {
   const [videoURL, setVideoURL] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [showLoadingPage, setShowLoadingPage] = useState(false); 
+  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
 
   const { auth, setAuth } = useContext(AuthContext);
   const location = useLocation();
@@ -90,31 +92,57 @@ function UploadPage() {
     }
   };
 
+  const userId =  JSON.parse(localStorage.getItem("id"));
   const sendDataToAlravel = (identCode, videoname, descript, subtitre) => {
+    const token = JSON.parse(localStorage.getItem("token"));
     axiosInstance.post('http://192.168.193.2:8000/api/video', {
-      'identification': identCode,
-      'videoname': videoname,
-      'discription': descript,
-      'subtitle': subtitre
+        'user_id': userId.id,
+        'identification': identCode,
+        'videoname': videoname,
+        'discription': descript,
+        'subtitle': subtitre
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token.token}`
+        }
     }).then(response => {
-      if (response.status === 201) {
-        alert("File uploaded.");
-        navigate("/library"); 
-      } else {
-        alert("Failed to upload file.");
-      }
+        if (response.status === 201) {
+            alert("File uploaded.");
+            navigate("/library"); 
+        } else {
+            alert("Failed to upload file.");
+        }
+    }).catch(error => {
+        console.error("Error uploading file:", error);
+        alert("An error occurred while uploading the file.");
     });
-  }
+};
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const { title, description, subtitles } = dataForVideo;
+    let newErrors = {};
+
+    if (!title.trim()) newErrors.title = 'Title is required';
+    if (!description.trim()) newErrors.description = 'Description is required';
+    if (!subtitles.trim()) newErrors.subtitles = 'Subtitles are required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrorMessage('Please fill in all required fields.');
+      return;
+    }
+
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      setErrorMessage('Please select a file to upload.');
       return;
     }
 
     setUploading(true);
+    setErrorMessage('');
 
     const formData = new FormData();
     formData.append('filedata', selectedFile);
@@ -130,12 +158,12 @@ function UploadPage() {
         if (response.status === 200) {
           sendDataToAlravel(identCode, dataForVideo.title, dataForVideo.description, dataForVideo.subtitles);
         } else {
-          alert("Failed to upload file.");
+          setErrorMessage('Failed to upload file.');
         }
       });
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("An error occurred while uploading the file.");
+      setErrorMessage('An error occurred while uploading the file.');
     } finally {
       setUploading(false);
       setShowLoadingPage(true);
@@ -160,9 +188,29 @@ function UploadPage() {
   };
 
   const handleApply = (modalType) => {
-    setOpenTitleModal(false);
-    setOpenDescriptionModal(false);
-    setOpenSubtitlesModal(false);
+    let isValid = true;
+    let newErrors = { ...errors };
+
+    if (modalType === 'title' && !dataForVideo.title.trim()) {
+      isValid = false;
+      newErrors.title = 'Title is required';
+    } else if (modalType === 'description' && !dataForVideo.description.trim()) {
+      isValid = false;
+      newErrors.description = 'Description is required';
+    } else if (modalType === 'subtitles' && !dataForVideo.subtitles.trim()) {
+      isValid = false;
+      newErrors.subtitles = 'Subtitles are required';
+    } else {
+      delete newErrors[modalType];
+    }
+
+    setErrors(newErrors);
+
+    if (isValid) {
+      if (modalType === 'title') setOpenTitleModal(false);
+      if (modalType === 'description') setOpenDescriptionModal(false);
+      if (modalType === 'subtitles') setOpenSubtitlesModal(false);
+    }
   };
 
   const modalStyle = {
@@ -283,6 +331,12 @@ function UploadPage() {
         </div>
       )}
 
+      {errorMessage && (
+        <div className="error-message" style={{ color: 'red', marginTop: '20px' }}>
+          {errorMessage}
+        </div>
+      )}
+
       <Modal
         open={openTitleModal}
         onClose={() => setOpenTitleModal(false)}
@@ -296,6 +350,8 @@ function UploadPage() {
             fullWidth
             value={dataForVideo.title}
             onChange={handleInputChange('title')}
+            error={!!errors.title}
+            helperText={errors.title}
           />
           <Button
             className="apply-button-title"
@@ -333,6 +389,8 @@ function UploadPage() {
             rows={4}
             value={dataForVideo.description}
             onChange={handleInputChange('description')}
+            error={!!errors.description}
+            helperText={errors.description}
           />
           <Button
             className="apply-button-description"
@@ -370,6 +428,8 @@ function UploadPage() {
             rows={4}
             value={dataForVideo.subtitles}
             onChange={handleInputChange('subtitles')}
+            error={!!errors.subtitles}
+            helperText={errors.subtitles}
           />
           <Button
             className="apply-button-title"

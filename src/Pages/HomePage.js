@@ -6,11 +6,11 @@ import "./HomePage.css";
 function HomePage() {
   const navigate = useNavigate();
 
-  // Эмуляция состояния авторизации. Замените на вашу реальную логику проверки авторизации.
+  
   const isAuthenticated = true;
 
   useEffect(() => {
-    // Если пользователь не авторизован, перенаправляем его на страницу входа
+    
     if (!isAuthenticated) {
       navigate("/sign-in");
     }
@@ -34,14 +34,14 @@ function HomePage() {
   };
 
   const onProfileClick = () => {
-    // Переход на страницу профиля только если пользователь авторизован
+    
     if (isAuthenticated) {
       navigate("/profile");
     }
   };
 
   const onUploadClick = () => {
-    // Переход на страницу загрузки только если пользователь авторизован
+    
     if (isAuthenticated) {
       navigate("/upload");
     }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://your-laravel-backend-url/api', // replace with your Laravel backend URL
+    baseURL: 'http://192.168.193.2:8000/api', 
     headers: {
         'Content-Type': 'application/json',
     },

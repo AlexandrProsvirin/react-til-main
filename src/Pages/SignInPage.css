@@ -1,4 +1,4 @@
-/* SignInPage.css */
+
 .page-container {
     position: relative;
     height: 100vh;
@@ -46,14 +46,13 @@
   .signInForm label {
     font-size: 18px;
   }
-  
-  /* SignInPage.css */
+
 .signInForm input{
   width: 100%;
   padding: 8px;
   font-size: 16px;
   display: block;
-  box-sizing: border-box; /* Учитывать padding и border в общей ширине */
+  box-sizing: border-box; 
   border-radius: 15px;
 }
   
@@ -64,4 +63,19 @@
     text-decoration: underline;
     color: white;
   }
+  .error-message-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+}
+
+
   

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from 'axios';
+import axios from 'axios';
 import './VideoList.css';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -7,6 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from "@mui/material/IconButton";
 import Modal from '@mui/material/Modal'; 
 import Box from '@mui/material/Box'; 
+import Pagination from './Pagination';  // Import Pagination
+import usePagination from './usePagination';  // Import usePagination
 
 const VideoList = () => {
   const [videoInfo, setVideoInfo] = useState([]);
@@ -14,20 +16,29 @@ const VideoList = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const videosPerPage = 8;
 
   useEffect(() => {
     const fetchVideoInformation = async () => {
       try {
-        console.log(localStorage.getItem('id'));
-        const response = await axiosInstance.get(`http://192.168.193.2:8000/video`);
+        const userId = JSON.parse(localStorage.getItem("id"));
+        const token = JSON.parse(localStorage.getItem("token"));
+        
+        const response = await axios.get(`http://192.168.193.2:8000/api/video/${userId.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token.token}`
+          }
+        });
+        
         console.log('Fetched video data:', response.data);
         setVideoInfo(response.data);
       } catch (error) {
         console.error('Error fetching video information:', error);
-      
+        setError('Failed to fetch video information.');
       }
     };
-
+    
     fetchVideoInformation();
   }, []);
 
@@ -43,12 +54,16 @@ const VideoList = () => {
     setSelectedVideo(video);
     setOpenModal(true);
     handleMenuClose();
-    console.log('Video properties:', video);
   };
 
   const handleDelete = async (video) => {
     try {
-      const response = await axiosInstance.delete(`http://192.168.193.2:8000/api/video/${video.id}`);
+      const token = JSON.parse(localStorage.getItem("token"));
+      const response = await axios.delete(`http://192.168.193.2:8000/api/video/${video.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token.token}`
+        }
+      });
       console.log(response.data.status);
       alert("Video removed");
       window.location.reload(); 
@@ -62,21 +77,36 @@ const VideoList = () => {
     setSelectedVideo(null);
   };
 
+  const handlePageChange = (pageNumber) => {
+    console.log('Page change to:', pageNumber);
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastVideo = currentPage * videosPerPage;
+  const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
+  const currentVideos = videoInfo.slice(indexOfFirstVideo, indexOfLastVideo);
+  const totalPages = Math.ceil(videoInfo.length / videosPerPage);
+  const pagesArray = usePagination(totalPages);
+
+  console.log('Current Page:', currentPage);
+  console.log('Total Pages:', totalPages);
+  console.log('Current Videos:', currentVideos);
+
   return (
     <div className="videoListWrapper"> 
       <div className="videoListBackground"></div> 
       <div className="videoList">
         {error && <p>{error}</p>}
-        {videoInfo.length > 0 ? (
-          videoInfo.map((video, index) => {
+        {currentVideos.length > 0 ? (
+          currentVideos.map((video, index) => {
             const videoUrl = `http://192.168.193.2:3000/${video.identification}/stream`;
-            console.log('Video URL:', videoUrl);
+            
             return (
               <div key={video.id} className="videoItem">
                 <div className="blackBlock"></div> 
                 <video width={320} height={240} controls>
                   <source src={videoUrl} type="video/mp4" />
-                  Ваш браузер не поддерживает видео тег.
+                  Your browser does not support the video tag.
                 </video>
                 <div className="videoInfo">
                   <div className="titleRow">
@@ -101,6 +131,11 @@ const VideoList = () => {
           <p>No videos available</p>
         )}
       </div>
+      <Pagination className="PaginationUnder"
+        pagesArray={pagesArray}
+        changePage={handlePageChange}
+        currentPage={currentPage}
+      />
       <Modal
         open={openModal}
         onClose={closeModal}
